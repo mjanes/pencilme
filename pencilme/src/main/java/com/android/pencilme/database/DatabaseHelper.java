@@ -2,42 +2,30 @@ package com.android.pencilme.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.android.pencilme.model.Task;
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
 /**
  * Created by mjanes on 5/20/2014.
  */
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
+
+    private static String TAG = "com.android.pencilme.database.DatabaseHelper";
 
     private Context mContext;
 
     private static final String DATABASE_NAME = "pencilme.db";
     private static final int DATABASE_VERSION = 1;
 
-    // Task table
-    public static final String TABLE_TASK = "task";
-    public static final String TASK_COLUMN_ID = "_id";
-    public static final String TASK_COLUMN_TITLE = "title";
-    public static final String TASK_COLUMN_EXPECTED_DURACTION = "expectedDuration";
-    public static final String TASK_COLUMN_ELAPSED_DURAION = "elapsedDuration";
-    public static final String TASK_COLUMN_DUE_DATE = "dueDate";
-    public static final String TASK_COLUMN_STATUS = "status";
-    public static final String TASK_COLUMN_MULTITASKABLE = "multitaskable";
-
-    private TaskDao mTaskDao;
-
-    private static final String DATABASE_CREATE = "CREATE TABLE "
-            + TABLE_TASK + "("
-            + TASK_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + TASK_COLUMN_TITLE + " text not null,"
-            + TASK_COLUMN_EXPECTED_DURACTION + " integer,"
-            + TASK_COLUMN_ELAPSED_DURAION + " integer,"
-            + TASK_COLUMN_DUE_DATE + " integer, "
-            + TASK_COLUMN_STATUS + " integer,"
-            + TASK_COLUMN_MULTITASKABLE + " integer"
-            + ");";
+    private Dao<Task, Long> mTaskDao;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,21 +33,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DATABASE_CREATE);
+    public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
+        try {
+            TableUtils.createTable(connectionSource, Task.class);
+        } catch (SQLException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASK);
-        onCreate(db);
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int previousVersion, int currenttVversion) {
+
     }
 
 
-    public TaskDao getTaskDao() throws SQLException {
+    public Dao<Task, Long> getTaskDao() throws SQLException {
         if (mTaskDao == null) {
-            mTaskDao = new TaskDao(mContext);
+            mTaskDao = DaoManager.createDao(getConnectionSource(), Task.class);
         }
         return mTaskDao;
+    }
+
+    @Override
+    public void close() {
+        super.close();
+
+        if (mTaskDao != null) {
+            mTaskDao.clearObjectCache();
+            mTaskDao = null;
+        }
     }
 }

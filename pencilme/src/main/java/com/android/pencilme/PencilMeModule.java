@@ -2,7 +2,8 @@ package com.android.pencilme;
 
 import android.content.Context;
 
-import com.android.pencilme.database.TaskDao;
+import com.android.pencilme.database.DatabaseHelper;
+import com.android.pencilme.manager.TaskManager;
 import com.android.pencilme.ui.fragment.NewTaskFragment;
 import com.android.pencilme.ui.fragment.TBDFragment;
 import com.android.pencilme.ui.fragment.TasksFragment;
@@ -20,10 +21,19 @@ import dagger.Provides;
 
 @Module(
     injects = {
+
+        // App
         PencilMeApp.class,
+
+        // Fragments
         TasksFragment.class,
         NewTaskFragment.class,
-        TBDFragment.class
+        TBDFragment.class,
+    },
+    staticInjections = {
+
+        // Managers
+        TaskManager.class
     },
     complete = false
 )
@@ -49,7 +59,6 @@ public class PencilMeModule {
 
     @Provides
     @Singleton
-    TaskDao provideTaskDao(Context context) {
-        return new TaskDao(context);
-    }
+    DatabaseHelper provideDatabaseHelper(Context context) { return new DatabaseHelper(context); }
+
 }

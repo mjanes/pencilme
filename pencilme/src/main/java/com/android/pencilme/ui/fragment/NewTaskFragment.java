@@ -14,7 +14,7 @@ import android.widget.EditText;
 
 import com.android.pencilme.PencilMeApp;
 import com.android.pencilme.R;
-import com.android.pencilme.database.TaskDao;
+import com.android.pencilme.manager.TaskManager;
 import com.android.pencilme.model.Task;
 import com.squareup.otto.Bus;
 
@@ -24,9 +24,6 @@ public class NewTaskFragment extends Fragment {
 
     @Inject
     Bus mBus;
-
-    @Inject
-    TaskDao mTaskDao;
 
     public static NewTaskFragment newInstance() {
         NewTaskFragment fragment = new NewTaskFragment();
@@ -52,7 +49,7 @@ public class NewTaskFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Task task = new Task(title.getText().toString());
-                mTaskDao.createTask(task);
+                TaskManager.createTask(task);
                 mBus.post(new Task.NewTaskEvent(task));
                 getActivity().finish();
             }

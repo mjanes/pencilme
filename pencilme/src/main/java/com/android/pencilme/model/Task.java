@@ -3,23 +3,55 @@ package com.android.pencilme.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.android.pencilme.manager.TaskManager;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 /**
  * Created by mjanes on 5/18/2014.
  */
+@DatabaseTable(tableName=Task.TABLE_NAME)
 public class Task implements Parcelable {
 
+    public static final String TABLE_NAME = "task";
     public static final String TASK_EXTRA = "extra.com.android.pencilme.model.task";
 
+    @Inject
+    static TaskManager sTaskManager;
+
+    public static final String ID = "_id";
+    public static final String TITLE = "title";
+    public static final String EXPECTED_DURATION = "expectedDuration";
+    public static final String ELAPSED_DURATION = "elapsedDuration";
+    public static final String DUE_DATE = "dueDate";
+    public static final String STATUS = "status";
+    public static final String MULTITASKABLE = "multitaskable";
+
+    @DatabaseField(generatedId=true, unique=true, columnName=ID)
     private long mId;
+
+    @DatabaseField(canBeNull = false, columnName = TITLE)
     private String mTitle;
+
+    @DatabaseField(columnName = EXPECTED_DURATION)
     private long mExpectedDuration;
+
+    @DatabaseField(columnName = ELAPSED_DURATION)
     private long mElapsedDuration;
+
+    @DatabaseField(columnName = DUE_DATE)
     private long mDueDate;
+
+    @DatabaseField(columnName = STATUS)
     private Status mStatus;
-    private boolean mIsMultitaskable;
+
+    @DatabaseField(columnName = MULTITASKABLE)
+    private boolean mMultitaskable;
 
     public enum Status {
         UNSTARTED(0),
@@ -110,11 +142,11 @@ public class Task implements Parcelable {
     }
 
     public boolean isMultitaskable() {
-        return mIsMultitaskable;
+        return mMultitaskable;
     }
 
     public void setMultitaskable(boolean isMultitaskable) {
-        this.mIsMultitaskable = isMultitaskable;
+        this.mMultitaskable = isMultitaskable;
     }
 
 
@@ -133,7 +165,7 @@ public class Task implements Parcelable {
         mElapsedDuration = in.readLong();
         mDueDate = in.readLong();
         mStatus = Status.fromInt(in.readInt());
-        // TODO: mIsMultitaskable
+        // TODO: mMultitaskable
     }
 
     @Override
@@ -148,7 +180,7 @@ public class Task implements Parcelable {
         dest.writeLong(mElapsedDuration);
         dest.writeLong(mDueDate);
         dest.writeInt(mStatus.toInt());
-        // TODO: mIsMultitaskable
+        // TODO: mMultitaskable
     }
 
     public static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>() {
@@ -178,6 +210,5 @@ public class Task implements Parcelable {
             return mTask;
         }
     }
-
 
 }

@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.android.pencilme.PencilMeApp;
 import com.android.pencilme.R;
-import com.android.pencilme.database.TaskDao;
+import com.android.pencilme.manager.TaskManager;
 import com.android.pencilme.model.Task;
 import com.android.pencilme.ui.adapter.TBDTasksAdapter;
 import com.squareup.otto.Bus;
@@ -30,7 +30,7 @@ public class TBDFragment extends ListFragment {
     Bus mBus;
 
     @Inject
-    TaskDao mTaskDao;
+    TaskManager mTaskManager;
 
     private TBDTasksAdapter mAdapter;
 
@@ -67,7 +67,7 @@ public class TBDFragment extends ListFragment {
 
         // TODO: This is imperfect, because it always reloading from the db, without checking if things
         // have changed. May use loader manager instead? But that seems overkill, and redundant with Otto.
-        mTBDTaskLoader = (TBDTaskLoader) new TBDTaskLoader(this, mTaskDao).execute();
+        mTBDTaskLoader = (TBDTaskLoader) new TBDTaskLoader(this, mTaskManager).execute();
     }
 
     @Override
@@ -99,16 +99,16 @@ public class TBDFragment extends ListFragment {
     private static class TBDTaskLoader extends AsyncTask<Void, Void, List<com.android.pencilme.model.Task>> {
 
         WeakReference<TBDFragment> mCallback;
-        TaskDao mTaskDao;
+        TaskManager mTaskManager;
 
-        public TBDTaskLoader(TBDFragment callback, TaskDao taskDao) {
+        public TBDTaskLoader(TBDFragment callback, TaskManager taskManager) {
             mCallback = new WeakReference<>(callback);
-            mTaskDao = taskDao;
+            mTaskManager = taskManager;
         }
 
         @Override
         protected List<Task> doInBackground(Void... params) {
-            return mTaskDao.getAllTasks();
+            return mTaskManager.getAllTasks();
         }
 
         @Override
