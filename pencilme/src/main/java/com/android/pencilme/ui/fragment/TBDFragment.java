@@ -5,7 +5,8 @@ package com.android.pencilme.ui.fragment;
  */
 
 import android.app.ListFragment;
-import android.os.AsyncTask;
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,28 +14,16 @@ import android.view.ViewGroup;
 
 import com.android.pencilme.PencilMeApp;
 import com.android.pencilme.R;
-import com.android.pencilme.manager.TaskManager;
+import com.android.pencilme.loader.TaskLoader;
 import com.android.pencilme.model.Task;
 import com.android.pencilme.ui.adapter.TBDTasksAdapter;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
-import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
-public class TBDFragment extends ListFragment {
-
-    @Inject
-    Bus mBus;
-
-    @Inject
-    TaskManager mTaskManager;
+public class TBDFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<Task>> {
 
     private TBDTasksAdapter mAdapter;
-
-    private TBDTaskLoader mTBDTaskLoader;
 
     public static TBDFragment newInstance() {
         TBDFragment fragment = new TBDFragment();
@@ -46,10 +35,11 @@ public class TBDFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((PencilMeApp) getActivity().getApplication()).injectFragment(this);
 
         mAdapter = new TBDTasksAdapter(getActivity());
         setListAdapter(mAdapter);
+
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -61,23 +51,6 @@ public class TBDFragment extends ListFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mBus.register(this);
-
-        // TODO: This is imperfect, because it always reloading from the db, without checking if things
-        // have changed. May use loader manager instead? But that seems overkill, and redundant with Otto.
-        mTBDTaskLoader = (TBDTaskLoader) new TBDTaskLoader(this, mTaskManager).execute();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mBus.unregister(this);
-        mTBDTaskLoader.cancel(true);
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
     }
@@ -86,38 +59,22 @@ public class TBDFragment extends ListFragment {
         return PencilMeApp.getContext().getString(R.string.title_tbd);
     }
 
-    @Subscribe
-    public void newTaskEvent(Task.NewTaskEvent event) {
-        mAdapter.addTask(event.getTask());
+
+    /** Loader Manager Callbacks */
+
+    @Override
+    public Loader<List<Task>> onCreateLoader(int id, Bundle args) {
+        return new TaskLoader((PencilMeApp) getActivity().getApplicationContext());
     }
 
-
-    public void onTasksLoaded(List<Task> tasks) {
-        mAdapter.setTasks(tasks);
+    @Override
+    public void onLoadFinished(Loader<List<Task>> loader, List<Task> data) {
+        mAdapter.setTasks(data);
     }
 
-    private static class TBDTaskLoader extends AsyncTask<Void, Void, List<com.android.pencilme.model.Task>> {
-
-        WeakReference<TBDFragment> mCallback;
-        TaskManager mTaskManager;
-
-        public TBDTaskLoader(TBDFragment callback, TaskManager taskManager) {
-            mCallback = new WeakReference<>(callback);
-            mTaskManager = taskManager;
-        }
-
-        @Override
-        protected List<Task> doInBackground(Void... params) {
-            return mTaskManager.getAllTasks();
-        }
-
-        @Override
-        protected void onPostExecute(List<Task> tasks) {
-            TBDFragment fragment = mCallback.get();
-            if (fragment != null) {
-                fragment.onTasksLoaded(tasks);
-            }
-        }
+    @Override
+    public void onLoaderReset(Loader<List<Task>> loader) {
+        mAdapter.setTasks(new ArrayList<Task>());
     }
 
 }

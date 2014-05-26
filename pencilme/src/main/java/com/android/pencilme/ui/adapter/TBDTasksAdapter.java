@@ -50,12 +50,10 @@ public class TBDTasksAdapter extends ArrayAdapter<Task> {
 
     public void setTasks(List<Task> tasks) {
         clear();
+        if (tasks == null) return;
         for (Task task : tasks) {
             add(task);
         }
     }
 
-    public void addTask(Task task) {
-        add(task);
-    }
 }

@@ -35,7 +35,7 @@ public class NewTaskFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((PencilMeApp) getActivity().getApplication()).injectFragment(this);
+        ((PencilMeApp) getActivity().getApplication()).injectObject(this);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class NewTaskFragment extends Fragment {
             public void onClick(View v) {
                 Task task = new Task(title.getText().toString());
                 TaskManager.createTask(task);
-                mBus.post(new Task.NewTaskEvent(task));
+                mBus.post(new TaskManager.NewTaskEvent(task));
                 getActivity().finish();
             }
         });

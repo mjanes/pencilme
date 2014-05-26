@@ -1,7 +1,6 @@
 package com.android.pencilme;
 
 import android.app.Application;
-import android.app.Fragment;
 import android.content.Context;
 
 import dagger.ObjectGraph;
@@ -31,14 +30,12 @@ public class PencilMeApp extends Application {
         return mObjectGraph;
     }
 
-    public void injectFragment(Fragment fragment) {
-        getObjectGraph().inject(fragment);
+    public void injectObject(Object object) {
+        getObjectGraph().inject(object);
     }
 
     public static Context getContext(){
         return sContext;
     }
-
-    // TODO: Close TaskDao on destroy?
 
 }

@@ -195,20 +195,4 @@ public class Task implements Parcelable {
 
     };
 
-
-
-    /** EventBus */
-
-    public static class NewTaskEvent {
-        private final Task mTask;
-
-        public NewTaskEvent(Task task) {
-            mTask = task;
-        }
-
-        public Task getTask() {
-            return mTask;
-        }
-    }
-
 }

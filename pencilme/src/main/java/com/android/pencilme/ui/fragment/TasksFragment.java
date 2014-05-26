@@ -44,7 +44,7 @@ public class TasksFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((PencilMeApp) getActivity().getApplication()).injectFragment(this);
+        ((PencilMeApp) getActivity().getApplication()).injectObject(this);
         setHasOptionsMenu(true);
     }
 
