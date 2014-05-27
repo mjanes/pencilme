@@ -21,7 +21,7 @@ import javax.inject.Inject;
  *
  * http://www.androiddesignpatterns.com/2012/08/implementing-loaders.html
  */
-public class TaskLoader extends AsyncTaskLoader<List<Task>> {
+public class UnscheduledTaskLoader extends AsyncTaskLoader<List<Task>> {
 
     private List<Task> mTasks;
 
@@ -31,16 +31,9 @@ public class TaskLoader extends AsyncTaskLoader<List<Task>> {
     @Inject
     Bus mBus;
 
-    public TaskLoader(PencilMeApp context) {
+    public UnscheduledTaskLoader(PencilMeApp context) {
         super(context);
         context.injectObject(this);
-    }
-
-    @Override
-    public List<Task> loadInBackground() {
-        List<Task> tasks = mTaskManager.getAllTasks();
-        // TODO: Sort
-        return tasks;
     }
 
     @Override
@@ -85,6 +78,14 @@ public class TaskLoader extends AsyncTaskLoader<List<Task>> {
             // null), we force a new load.
             forceLoad();
         }
+    }
+
+
+    @Override
+    public List<Task> loadInBackground() {
+        List<Task> tasks = mTaskManager.getAllUnscheduledTasks();
+        // TODO: Sort
+        return tasks;
     }
 
     @Override
@@ -132,7 +133,5 @@ public class TaskLoader extends AsyncTaskLoader<List<Task>> {
         mTasks.add(event.getTask());
         onContentChanged();
     }
-
-
 
 }

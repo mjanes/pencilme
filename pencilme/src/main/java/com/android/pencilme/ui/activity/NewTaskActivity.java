@@ -12,10 +12,6 @@ import com.android.pencilme.ui.fragment.NewTaskFragment;
 
 public class NewTaskActivity extends Activity {
 
-    public static final int REQUEST_NEW_TASK = 0;
-
-    protected CharSequence mTitle;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,8 +19,6 @@ public class NewTaskActivity extends Activity {
         setContentView(R.layout.activity_new_task);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mTitle = getString(R.string.title_new_task);
 
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentById(R.layout.fragment_new_task);

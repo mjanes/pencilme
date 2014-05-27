@@ -5,6 +5,7 @@ import android.util.Log;
 import com.android.pencilme.PencilMeApp;
 import com.android.pencilme.model.Task;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.util.ArrayList;
@@ -48,9 +49,8 @@ public class TaskManager {
         try {
             Dao<Task, Long> taskDao = sPencilMeApp.getDatabaseHelper().getTaskDao();
             QueryBuilder<Task, Long> queryBuilder = taskDao.queryBuilder();
-            // TODO: Query by whether or not there is a scheduled start date. Revise the damn data model.
-            //PreparedQuery<Task> preparedQuery = queryBuilder.where().eq(Task.STATUS);
-            //tasks = taskDao.query(preparedQuery);
+            PreparedQuery<Task> preparedQuery = queryBuilder.where().isNull(Task.SCHEDULED_DATE).prepare();
+            tasks = taskDao.query(preparedQuery);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }

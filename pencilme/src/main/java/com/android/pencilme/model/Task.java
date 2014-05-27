@@ -162,7 +162,8 @@ public class Task implements Parcelable {
         mTitle = in.readString();
         mExpectedDuration = in.readLong();
         mElapsedDuration = in.readLong();
-        mDueDate = new Date(in.readLong());
+        long date = in.readLong();
+        mDueDate = date == 0 ? null : new Date(date);
         mStatus = Status.fromInt(in.readInt());
         mMultitaskable = in.readInt() == 1 ? true : false;
     }
@@ -177,7 +178,7 @@ public class Task implements Parcelable {
         dest.writeString(mTitle);
         dest.writeLong(mExpectedDuration);
         dest.writeLong(mElapsedDuration);
-        dest.writeLong(mDueDate.getTime());
+        dest.writeLong(mDueDate == null ? 0 : mDueDate.getTime());
         dest.writeInt(mStatus.toInt());
         dest.writeInt(mMultitaskable ? 1 : 0);
     }

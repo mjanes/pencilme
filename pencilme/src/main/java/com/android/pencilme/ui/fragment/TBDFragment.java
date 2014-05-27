@@ -6,16 +6,19 @@ package com.android.pencilme.ui.fragment;
 
 import android.app.ListFragment;
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.android.pencilme.PencilMeApp;
 import com.android.pencilme.R;
-import com.android.pencilme.loader.TaskLoader;
+import com.android.pencilme.loader.UnscheduledTaskLoader;
 import com.android.pencilme.model.Task;
+import com.android.pencilme.ui.activity.TaskDetailActivity;
 import com.android.pencilme.ui.adapter.TBDTasksAdapter;
 
 import java.util.ArrayList;
@@ -50,13 +53,18 @@ public class TBDFragment extends ListFragment implements LoaderManager.LoaderCal
         return view;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     public static CharSequence getTitle() {
         return PencilMeApp.getContext().getString(R.string.title_tbd);
+    }
+
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        Task selectedTask = (Task) getListAdapter().getItem(position);
+        Intent intent = new Intent(getActivity(), TaskDetailActivity.class);
+        intent.putExtra(Task.TASK_EXTRA, selectedTask);
+        startActivity(intent);
     }
 
 
@@ -64,7 +72,7 @@ public class TBDFragment extends ListFragment implements LoaderManager.LoaderCal
 
     @Override
     public Loader<List<Task>> onCreateLoader(int id, Bundle args) {
-        return new TaskLoader((PencilMeApp) getActivity().getApplicationContext());
+        return new UnscheduledTaskLoader((PencilMeApp) getActivity().getApplicationContext());
     }
 
     @Override

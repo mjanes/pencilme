@@ -1,6 +1,6 @@
 package com.android.pencilme;
 
-import com.android.pencilme.loader.TaskLoader;
+import com.android.pencilme.loader.UnscheduledTaskLoader;
 import com.android.pencilme.manager.TaskManager;
 import com.android.pencilme.ui.fragment.NewTaskFragment;
 import com.squareup.otto.Bus;
@@ -25,7 +25,7 @@ import dagger.Provides;
         NewTaskFragment.class,
 
         // Loaders
-        TaskLoader.class
+        UnscheduledTaskLoader.class
     },
     staticInjections = {
 

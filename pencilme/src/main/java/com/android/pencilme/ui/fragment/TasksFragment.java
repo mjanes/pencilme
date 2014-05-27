@@ -111,7 +111,6 @@ public class TasksFragment extends Fragment {
 
     private void addNewTask() {
         Intent intent = new Intent(getActivity(), NewTaskActivity.class);
-        //startActivityForResult(intent, NewTaskActivity.REQUEST_NEW_TASK);
         startActivity(intent);
     }
 
