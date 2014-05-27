@@ -3,14 +3,12 @@ package com.android.pencilme.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.android.pencilme.manager.TaskManager;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 /**
  * Created by mjanes on 5/18/2014.
@@ -21,9 +19,6 @@ public class Task implements Parcelable {
     public static final String TABLE_NAME = "task";
     public static final String TASK_EXTRA = "extra.com.android.pencilme.model.task";
 
-    @Inject
-    static TaskManager sTaskManager;
-
     public static final String ID = "_id";
     public static final String TITLE = "title";
     public static final String EXPECTED_DURATION = "expectedDuration";
@@ -31,8 +26,9 @@ public class Task implements Parcelable {
     public static final String DUE_DATE = "dueDate";
     public static final String STATUS = "status";
     public static final String MULTITASKABLE = "multitaskable";
+    public static final String SCHEDULED_DATE = "scheduledTime";
 
-    @DatabaseField(generatedId=true, unique=true, columnName=ID)
+    @DatabaseField(generatedId=true, columnName=ID)
     private long mId;
 
     @DatabaseField(canBeNull = false, columnName = TITLE)
@@ -45,13 +41,16 @@ public class Task implements Parcelable {
     private long mElapsedDuration;
 
     @DatabaseField(columnName = DUE_DATE)
-    private long mDueDate;
+    private Date mDueDate;
 
     @DatabaseField(columnName = STATUS)
     private Status mStatus;
 
     @DatabaseField(columnName = MULTITASKABLE)
     private boolean mMultitaskable;
+
+    @DatabaseField(columnName = SCHEDULED_DATE, foreign = true)
+    private Event mScheduledDate;
 
     public enum Status {
         UNSTARTED(0),
@@ -125,11 +124,11 @@ public class Task implements Parcelable {
         mElapsedDuration = elapsedDuration;
     }
 
-    public long getDueDate() {
+    public Date getDueDate() {
         return mDueDate;
     }
 
-    public void setDueDate(long dueDate) {
+    public void setDueDate(Date dueDate) {
         mDueDate = dueDate;
     }
 
@@ -163,9 +162,9 @@ public class Task implements Parcelable {
         mTitle = in.readString();
         mExpectedDuration = in.readLong();
         mElapsedDuration = in.readLong();
-        mDueDate = in.readLong();
+        mDueDate = new Date(in.readLong());
         mStatus = Status.fromInt(in.readInt());
-        // TODO: mMultitaskable
+        mMultitaskable = in.readInt() == 1 ? true : false;
     }
 
     @Override
@@ -178,9 +177,9 @@ public class Task implements Parcelable {
         dest.writeString(mTitle);
         dest.writeLong(mExpectedDuration);
         dest.writeLong(mElapsedDuration);
-        dest.writeLong(mDueDate);
+        dest.writeLong(mDueDate.getTime());
         dest.writeInt(mStatus.toInt());
-        // TODO: mMultitaskable
+        dest.writeInt(mMultitaskable ? 1 : 0);
     }
 
     public static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>() {

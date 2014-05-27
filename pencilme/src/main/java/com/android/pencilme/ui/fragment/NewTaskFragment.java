@@ -69,10 +69,4 @@ public class NewTaskFragment extends Fragment {
         super.onPause();
         mBus.unregister(this);
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
 }

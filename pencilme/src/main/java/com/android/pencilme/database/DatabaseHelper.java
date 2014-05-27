@@ -20,8 +20,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static String TAG = "com.android.pencilme.database.DatabaseHelper";
 
-    private Context mContext;
-
     private static final String DATABASE_NAME = "pencilme.db";
     private static final int DATABASE_VERSION = 1;
 
@@ -29,7 +27,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        mContext = context;
     }
 
     @Override

@@ -1,13 +1,8 @@
 package com.android.pencilme;
 
-import android.content.Context;
-
-import com.android.pencilme.database.DatabaseHelper;
 import com.android.pencilme.loader.TaskLoader;
 import com.android.pencilme.manager.TaskManager;
 import com.android.pencilme.ui.fragment.NewTaskFragment;
-import com.android.pencilme.ui.fragment.TBDFragment;
-import com.android.pencilme.ui.fragment.TasksFragment;
 import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
@@ -27,9 +22,7 @@ import dagger.Provides;
         PencilMeApp.class,
 
         // Fragments
-        TasksFragment.class,
         NewTaskFragment.class,
-        TBDFragment.class,
 
         // Loaders
         TaskLoader.class
@@ -57,12 +50,8 @@ public class PencilMeModule {
 
     @Provides
     @Singleton
-    Context provideApplicationContext() {
+    PencilMeApp provideApplicationContext() {
         return mApplication;
     }
-
-    @Provides
-    @Singleton
-    DatabaseHelper provideDatabaseHelper(Context context) { return new DatabaseHelper(context); }
 
 }

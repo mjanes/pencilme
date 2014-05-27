@@ -18,18 +18,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.pencilme.PencilMeApp;
 import com.android.pencilme.R;
 import com.android.pencilme.ui.activity.MainActivity;
 import com.android.pencilme.ui.activity.NewTaskActivity;
-import com.squareup.otto.Bus;
-
-import javax.inject.Inject;
 
 public class TasksFragment extends Fragment {
-
-    @Inject
-    Bus mBus;
 
     private ViewPager mViewPager;
     private TasksTabPagerAdapter mViewPagerAdapter;
@@ -44,7 +37,6 @@ public class TasksFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((PencilMeApp) getActivity().getApplication()).injectObject(this);
         setHasOptionsMenu(true);
     }
 
@@ -63,19 +55,6 @@ public class TasksFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         ((MainActivity) activity).onSectionAttached(getString(R.string.title_tasks));
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mBus.register(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mBus.unregister(this);
     }
 
     private static class TasksTabPagerAdapter extends FragmentPagerAdapter {

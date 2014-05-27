@@ -3,6 +3,9 @@ package com.android.pencilme;
 import android.app.Application;
 import android.content.Context;
 
+import com.android.pencilme.database.DatabaseHelper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
 import dagger.ObjectGraph;
 
 /**
@@ -13,6 +16,9 @@ public class PencilMeApp extends Application {
     private ObjectGraph mObjectGraph;
 
     private static Context sContext;
+
+    private static DatabaseHelper sDatabaseHelper;
+
 
     @Override
     public void onCreate() {
@@ -36,6 +42,14 @@ public class PencilMeApp extends Application {
 
     public static Context getContext(){
         return sContext;
+    }
+
+    public static DatabaseHelper getDatabaseHelper() {
+        if (sDatabaseHelper == null) {
+            sDatabaseHelper = OpenHelperManager.getHelper(sContext, DatabaseHelper.class);
+        }
+        return sDatabaseHelper;
+        // TODO: Release database helper
     }
 
 }
