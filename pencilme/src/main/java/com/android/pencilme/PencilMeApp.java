@@ -25,7 +25,6 @@ public class PencilMeApp extends Application {
         super.onCreate();
         ObjectGraph objectGraph = getObjectGraph();
         objectGraph.inject(this);
-        objectGraph.injectStatics();
         sContext = this;
     }
 

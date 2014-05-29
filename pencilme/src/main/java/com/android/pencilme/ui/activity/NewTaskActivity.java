@@ -1,7 +1,6 @@
 package com.android.pencilme.ui.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,8 +8,11 @@ import android.view.MenuItem;
 
 import com.android.pencilme.R;
 import com.android.pencilme.ui.fragment.NewTaskFragment;
+import com.android.pencilme.ui.fragment.abstraction.TaskFragment;
 
-public class NewTaskActivity extends Activity {
+public class NewTaskActivity extends Activity implements TaskFragment.OnSetDurationClickedListener {
+
+    private NewTaskFragment mNewTaskFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,12 +23,12 @@ public class NewTaskActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         FragmentManager fm = getFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.layout.fragment_new_task);
+        mNewTaskFragment = (NewTaskFragment) fm.findFragmentById(R.layout.fragment_new_task);
 
-        if (fragment == null) {
-            fragment = NewTaskFragment.newInstance();
+        if (mNewTaskFragment == null) {
+            mNewTaskFragment = NewTaskFragment.newInstance();
             fm.beginTransaction().
-                    add(R.id.fragment_container, fragment).
+                    add(R.id.fragment_container, mNewTaskFragment).
                     commit();
         }
     }
@@ -63,5 +65,10 @@ public class NewTaskActivity extends Activity {
 
     private void cancel() {
         finish();
+    }
+
+    @Override
+    public void onSetDurationClicked() {
+
     }
 }

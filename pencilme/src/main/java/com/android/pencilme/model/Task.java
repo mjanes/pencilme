@@ -3,6 +3,7 @@ package com.android.pencilme.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.android.pencilme.manager.TaskManager;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -26,7 +27,7 @@ public class Task implements Parcelable {
     public static final String DUE_DATE = "dueDate";
     public static final String STATUS = "status";
     public static final String MULTITASKABLE = "multitaskable";
-    public static final String SCHEDULED_DATE = "scheduledTime";
+    public static final String SCHEDULED_TIME = "scheduledTime";
 
     @DatabaseField(generatedId=true, columnName=ID)
     private long mId;
@@ -35,10 +36,10 @@ public class Task implements Parcelable {
     private String mTitle;
 
     @DatabaseField(columnName = EXPECTED_DURATION)
-    private long mExpectedDuration;
+    private int mExpectedDuration;
 
     @DatabaseField(columnName = ELAPSED_DURATION)
-    private long mElapsedDuration;
+    private int mElapsedDuration;
 
     @DatabaseField(columnName = DUE_DATE)
     private Date mDueDate;
@@ -49,8 +50,8 @@ public class Task implements Parcelable {
     @DatabaseField(columnName = MULTITASKABLE)
     private boolean mMultitaskable;
 
-    @DatabaseField(columnName = SCHEDULED_DATE, foreign = true)
-    private Event mScheduledDate;
+    @DatabaseField(columnName = SCHEDULED_TIME, foreign = true)
+    private Event mScheduledTime;
 
     public enum Status {
         UNSTARTED(0),
@@ -80,15 +81,51 @@ public class Task implements Parcelable {
         }
     }
 
-    /** Constructors */
+    /** Constructors and Builder */
 
-    public Task() {}
+    public static class Builder {
+        // Required parameters
+        private String mTitle;
 
-    public Task(String title) {
-        mTitle = title;
-        mStatus = Status.UNSTARTED;
+        // Optional parameters initialized to default values
+        private int mExpectedDuration = 0;
+        private int mElapsedDuration = 0;
+        private Date mDueDate = null;
+        private Status mStatus = Status.UNSTARTED;
+        private boolean mMultitaskable = false;
+        private Event mScheduledTime;
+
+        public Builder(String title) {
+            mTitle = title;
+        }
+
+        public Builder expectedDuration(int expectedDuration) { mExpectedDuration = expectedDuration; return this; }
+        public Builder elapsedDuration(int elapsedDuration) { mElapsedDuration = elapsedDuration; return this; }
+        public Builder dueDate(Date dueDate) { mDueDate = dueDate; return this; }
+        public Builder status(Status status) { mStatus = status; return this; }
+        public Builder multitaskable(boolean multitaskable) { mMultitaskable = multitaskable; return this; }
+        public Builder scheduledTime(Event event) { mScheduledTime = event; return this; }
+
+        public Task build() {
+            Task task = new Task(this);
+            TaskManager.createTask(task);
+            return task;
+        }
+
     }
 
+    // Required for ORMLite
+    public Task() {}
+
+    public Task(Builder builder) {
+        mTitle = builder.mTitle;
+        mExpectedDuration = builder.mExpectedDuration;
+        mElapsedDuration = builder.mElapsedDuration;
+        mDueDate = builder.mDueDate;
+        mStatus = builder.mStatus;
+        mMultitaskable = builder.mMultitaskable;
+        mScheduledTime = builder.mScheduledTime;
+    }
 
     /** Getters and setters */
 
@@ -108,19 +145,19 @@ public class Task implements Parcelable {
         mTitle = title;
     }
 
-    public long getExpectedDuration() {
+    public int getExpectedDuration() {
         return mExpectedDuration;
     }
 
-    public void setExpectedDuration(long expectedDuration) {
+    public void setExpectedDuration(int expectedDuration) {
         mExpectedDuration = expectedDuration;
     }
 
-    public long getElapsedDuration() {
+    public int getElapsedDuration() {
         return mElapsedDuration;
     }
 
-    public void setElapsedDuration(long elapsedDuration) {
+    public void setElapsedDuration(int elapsedDuration) {
         mElapsedDuration = elapsedDuration;
     }
 
@@ -149,7 +186,13 @@ public class Task implements Parcelable {
     }
 
 
-    /** Object methods */
+    /** Utility methods */
+
+    public String getExpectedDurationAsString() {
+        return "";
+    }
+
+    /** Inheriting from object methods */
 
     @Override public String toString() {
         return mTitle;
@@ -160,8 +203,8 @@ public class Task implements Parcelable {
 
     public Task(Parcel in) {
         mTitle = in.readString();
-        mExpectedDuration = in.readLong();
-        mElapsedDuration = in.readLong();
+        mExpectedDuration = in.readInt();
+        mElapsedDuration = in.readInt();
         long date = in.readLong();
         mDueDate = date == 0 ? null : new Date(date);
         mStatus = Status.fromInt(in.readInt());
@@ -176,8 +219,8 @@ public class Task implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mTitle);
-        dest.writeLong(mExpectedDuration);
-        dest.writeLong(mElapsedDuration);
+        dest.writeInt(mExpectedDuration);
+        dest.writeInt(mElapsedDuration);
         dest.writeLong(mDueDate == null ? 0 : mDueDate.getTime());
         dest.writeInt(mStatus.toInt());
         dest.writeInt(mMultitaskable ? 1 : 0);

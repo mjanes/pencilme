@@ -10,8 +10,9 @@ import android.view.MenuItem;
 import com.android.pencilme.R;
 import com.android.pencilme.model.Task;
 import com.android.pencilme.ui.fragment.TaskDetailFragment;
+import com.android.pencilme.ui.fragment.abstraction.TaskFragment;
 
-public class TaskDetailActivity extends Activity {
+public class TaskDetailActivity extends Activity  implements TaskFragment.OnSetDurationClickedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,11 @@ public class TaskDetailActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSetDurationClicked() {
+
     }
 }

@@ -26,9 +26,6 @@ public class UnscheduledTaskLoader extends AsyncTaskLoader<List<Task>> {
     private List<Task> mTasks;
 
     @Inject
-    TaskManager mTaskManager;
-
-    @Inject
     Bus mBus;
 
     public UnscheduledTaskLoader(PencilMeApp context) {
@@ -83,7 +80,7 @@ public class UnscheduledTaskLoader extends AsyncTaskLoader<List<Task>> {
 
     @Override
     public List<Task> loadInBackground() {
-        List<Task> tasks = mTaskManager.getAllUnscheduledTasks();
+        List<Task> tasks = TaskManager.getAllUnscheduledTasks();
         // TODO: Sort
         return tasks;
     }

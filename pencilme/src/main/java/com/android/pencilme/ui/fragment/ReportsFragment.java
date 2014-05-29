@@ -16,16 +16,14 @@ import com.android.pencilme.ui.activity.MainActivity;
 public class ReportsFragment extends Fragment {
 
     public static ReportsFragment newInstance() {
-        ReportsFragment fragment = new ReportsFragment();
-        return fragment;
+        return new ReportsFragment();
     }
 
     public ReportsFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_reports, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_reports, container, false);
     }
 
     @Override

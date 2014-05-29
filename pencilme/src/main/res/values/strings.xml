@@ -21,7 +21,12 @@
     <string name="multitaskable">Multitaskable</string>
     <string name="done">Done</string>
     <string name="save">Save</string>
-    <string name="tbd_empty">There are no tasks to do!</string>
+    <string name="next">Next</string>
+    <string name="tbd_empty">There are no tasks to schedule.</string>
     <string name="scheduled_empty">You have no scheduled tasks.</string>
+    <string name="hours">Hours</string>
+    <string name="minutes">Minutes</string>
+    <string name="seconds">Seconds</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

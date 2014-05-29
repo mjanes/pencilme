@@ -7,7 +7,7 @@
     android:padding="8dp">
 
 
-    <include layout="@layout/layout_task_detail"
+    <include layout="@layout/task_detail"
              android:id="@+id/task_detail"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
