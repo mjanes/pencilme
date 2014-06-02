@@ -4,6 +4,7 @@ package com.android.pencilme.ui.fragment;
  * Created by mjanes on 5/17/2014.
  */
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +18,11 @@ import com.android.pencilme.PencilMeApp;
 import com.android.pencilme.R;
 import com.android.pencilme.manager.TaskManager;
 import com.android.pencilme.model.Task;
-import com.android.pencilme.ui.fragment.abstraction.TaskFragment;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
-public class NewTaskFragment extends TaskFragment {
+public class NewTaskFragment extends Fragment {
 
     @Inject
     Bus mBus;
@@ -50,9 +50,7 @@ public class NewTaskFragment extends TaskFragment {
         durationContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onSetDurationClicked();
-                }
+                // TODO: Time picker
             }
         });
 

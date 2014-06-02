@@ -1,5 +1,6 @@
 package com.android.pencilme.ui.fragment;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +12,8 @@ import android.widget.LinearLayout;
 
 import com.android.pencilme.R;
 import com.android.pencilme.model.Task;
-import com.android.pencilme.ui.fragment.abstraction.TaskFragment;
 
-public class TaskDetailFragment extends TaskFragment {
+public class TaskDetailFragment extends Fragment {
 
     private static final String ARG_TASK = "task";
 
@@ -56,9 +56,7 @@ public class TaskDetailFragment extends TaskFragment {
         durationContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onSetDurationClicked();
-                }
+                // TODO: Number picker
             }
         });
 
