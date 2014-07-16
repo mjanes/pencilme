@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -96,7 +97,12 @@ public class TaskDetailFragment extends Fragment {
 
         final CheckBox multitaskableCheckbox = (CheckBox) view.findViewById(R.id.multitaskable_checkbox);
         multitaskableCheckbox.setChecked(mTask.isMultitaskable());
-
+        multitaskableCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mTask.setMultitaskable(isChecked);
+            }
+        });
 
         Button save = (Button) view.findViewById(R.id.save);
         save.setOnClickListener(new View.OnClickListener() {

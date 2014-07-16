@@ -224,6 +224,7 @@ public class Task implements Parcelable {
     /** Parceling */
 
     public Task(Parcel in) {
+        mId = in.readLong();
         mTitle = in.readString();
         mExpectedDuration = in.readInt();
         mElapsedDuration = in.readInt();
@@ -240,6 +241,7 @@ public class Task implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(mId);
         dest.writeString(mTitle);
         dest.writeInt(mExpectedDuration);
         dest.writeInt(mElapsedDuration);

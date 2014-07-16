@@ -81,7 +81,6 @@ public class UnscheduledTaskLoader extends AsyncTaskLoader<List<Task>> {
     @Override
     public List<Task> loadInBackground() {
         List<Task> tasks = TaskManager.getAllUnscheduledTasks();
-        // TODO: Sort
         return tasks;
     }
 
@@ -127,7 +126,6 @@ public class UnscheduledTaskLoader extends AsyncTaskLoader<List<Task>> {
 
     @Subscribe
     public void newTaskEvent(TaskManager.NewTaskEvent event) {
-        mTasks.add(event.getTask());
         onContentChanged();
     }
 

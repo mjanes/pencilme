@@ -60,7 +60,7 @@ public class TBDFragment extends ListFragment implements LoaderManager.LoaderCal
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        Task selectedTask = (Task) getListAdapter().getItem(position);
+        Task selectedTask = mAdapter.getItem(position);
         Intent intent = new Intent(getActivity(), TaskDetailActivity.class);
         intent.putExtra(Task.TASK_EXTRA, selectedTask);
         startActivity(intent);
