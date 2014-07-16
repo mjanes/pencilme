@@ -8,9 +8,13 @@ import android.view.MenuItem;
 
 import com.android.pencilme.R;
 import com.android.pencilme.model.Task;
+import com.android.pencilme.ui.fragment.NewTaskFragment;
 import com.android.pencilme.ui.fragment.TaskDetailFragment;
+import com.android.pencilme.ui.widget.DurationPickerDialogFragment;
 
-public class TaskDetailActivity extends Activity {
+public class TaskDetailActivity extends Activity implements DurationPickerDialogFragment.OnDurationSetListener {
+
+    TaskDetailFragment mTaskDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +31,12 @@ public class TaskDetailActivity extends Activity {
         }
 
         FragmentManager fm = getFragmentManager();
-        TaskDetailFragment fragment = (TaskDetailFragment) fm.findFragmentById(R.layout.fragment_task_detail);
+        mTaskDetailFragment = (TaskDetailFragment) fm.findFragmentById(R.layout.fragment_task_detail);
 
-        if (fragment == null) {
-            fragment = TaskDetailFragment.newInstance(task);
+        if (mTaskDetailFragment == null) {
+            mTaskDetailFragment = TaskDetailFragment.newInstance(task);
             fm.beginTransaction().
-                    add(R.id.fragment_container, fragment).
+                    add(R.id.fragment_container, mTaskDetailFragment).
                     commit();
         }
     }
@@ -49,4 +53,9 @@ public class TaskDetailActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    public void onDurationSet(int seconds) {
+        mTaskDetailFragment.setTaskDuration(seconds);
+    }
 }

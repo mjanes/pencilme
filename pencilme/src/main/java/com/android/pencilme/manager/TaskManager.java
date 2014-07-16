@@ -28,7 +28,6 @@ public class TaskManager {
         }
     }
 
-
     public static List<Task> getAllTasks() {
         List<Task> tasks = new ArrayList<>();
         try {
@@ -59,6 +58,18 @@ public class TaskManager {
         private final Task mTask;
 
         public NewTaskEvent(Task task) {
+            mTask = task;
+        }
+
+        public Task getTask() {
+            return mTask;
+        }
+    }
+
+    public static class EditTaskEvent {
+        private final Task mTask;
+
+        public EditTaskEvent(Task task) {
             mTask = task;
         }
 

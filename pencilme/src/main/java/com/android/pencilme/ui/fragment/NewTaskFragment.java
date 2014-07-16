@@ -5,6 +5,7 @@ package com.android.pencilme.ui.fragment;
  */
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,19 +14,27 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.pencilme.PencilMeApp;
 import com.android.pencilme.R;
 import com.android.pencilme.manager.TaskManager;
 import com.android.pencilme.model.Task;
+import com.android.pencilme.ui.widget.DurationPickerDialogFragment;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
 public class NewTaskFragment extends Fragment {
 
+    private static final String DIALOG_TAG = "tag.com.android.pencilme.ui.fragment.newtaskfragment.dialog";
+
     @Inject
     Bus mBus;
+
+    private TextView mDurationValueTextView;
+    private int mTaskDuration;
+
 
     public static NewTaskFragment newInstance() {
         NewTaskFragment fragment = new NewTaskFragment();
@@ -47,10 +56,23 @@ public class NewTaskFragment extends Fragment {
         final EditText title = (EditText) view.findViewById(R.id.title);
 
         final LinearLayout durationContainer = (LinearLayout) view.findViewById(R.id.duration_container);
+
+        mDurationValueTextView = (TextView) durationContainer.findViewById(R.id.duration_value);
+
         durationContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Time picker
+
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                Fragment prev = getFragmentManager().findFragmentByTag(DIALOG_TAG);
+
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+
+                DurationPickerDialogFragment dialogFragment = DurationPickerDialogFragment.newInstance();
+                dialogFragment.show(ft, DIALOG_TAG);
             }
         });
 
@@ -60,7 +82,10 @@ public class NewTaskFragment extends Fragment {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Task task = new Task.Builder(title.getText().toString()).multitaskable(multitaskableCheckbox.isChecked()).build();
+                Task task = new Task.Builder(title.getText().toString())
+                        .multitaskable(multitaskableCheckbox.isChecked())
+                        .expectedDuration(mTaskDuration)
+                        .build();
                 mBus.post(new TaskManager.NewTaskEvent(task));
                 getActivity().finish();
             }
@@ -81,4 +106,8 @@ public class NewTaskFragment extends Fragment {
         mBus.unregister(this);
     }
 
+    public void setTaskDuration(int seconds) {
+        mTaskDuration = seconds;
+        mDurationValueTextView.setText(Task.getDurationAsString(mTaskDuration));
+    }
 }

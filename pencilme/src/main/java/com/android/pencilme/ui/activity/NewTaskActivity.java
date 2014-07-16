@@ -9,8 +9,11 @@ import android.view.MenuItem;
 
 import com.android.pencilme.R;
 import com.android.pencilme.ui.fragment.NewTaskFragment;
+import com.android.pencilme.ui.widget.DurationPickerDialogFragment;
 
-public class NewTaskActivity extends Activity {
+public class NewTaskActivity extends Activity implements DurationPickerDialogFragment.OnDurationSetListener {
+
+    NewTaskFragment mNewTaskFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,12 +24,12 @@ public class NewTaskActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         FragmentManager fm = getFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.layout.fragment_new_task);
+        mNewTaskFragment = (NewTaskFragment) fm.findFragmentById(R.layout.fragment_new_task);
 
-        if (fragment == null) {
-            fragment = NewTaskFragment.newInstance();
+        if (mNewTaskFragment == null) {
+            mNewTaskFragment = NewTaskFragment.newInstance();
             fm.beginTransaction().
-                    add(R.id.fragment_container, fragment).
+                    add(R.id.fragment_container, mNewTaskFragment).
                     commit();
         }
     }
@@ -65,4 +68,9 @@ public class NewTaskActivity extends Activity {
         finish();
     }
 
+
+    @Override
+    public void onDurationSet(int seconds) {
+        mNewTaskFragment.setTaskDuration(seconds);
+    }
 }

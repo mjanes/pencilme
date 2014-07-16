@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * Created by mjanes on 5/26/2014.
  */
-@DatabaseTable(tableName=Task.TABLE_NAME)
+@DatabaseTable(tableName=Event.TABLE_NAME)
 public class Event {
 
     public static final String TABLE_NAME = "event";
@@ -26,4 +26,19 @@ public class Event {
     @DatabaseField(columnName = DATE)
     private Date mDate;
 
+    public long getCreated() {
+        return mCreated;
+    }
+
+    public void setCreated(long created) {
+        mCreated = created;
+    }
+
+    public Date getDate() {
+        return mDate;
+    }
+
+    public void setDate(Date date) {
+        mDate = date;
+    }
 }
