@@ -2,7 +2,9 @@ package com.android.pencilme.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
+import com.android.pencilme.PencilMeApp;
 import com.android.pencilme.manager.TaskManager;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -17,6 +19,7 @@ import java.util.Map;
 @DatabaseTable(tableName=Task.TABLE_NAME)
 public class Task implements Parcelable {
 
+    public static final String TAG = "tag.com.android.pencilme.model.task";
     public static final String TABLE_NAME = "task";
     public static final String TASK_EXTRA = "extra.com.android.pencilme.model.task";
 
@@ -127,6 +130,25 @@ public class Task implements Parcelable {
         mScheduledTime = builder.mScheduledTime;
     }
 
+    /**
+     * DB interactions
+     *
+     * QUESTION: Would it be better to have this/these in TaskManager? Hmmm... At the moment all
+     * tasks are being created through the TaskManager, which makes sense given that there is only
+     * one part of the application that can create a new task. Seems like it might be an unnecessary
+     * division though.
+     */
+
+    public boolean save() {
+        try {
+            PencilMeApp.getDatabaseHelper().getTaskDao().update(this);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+            return false;
+        }
+        return true;
+    }
+
     /** Getters and setters */
 
     public long getId() {
@@ -188,8 +210,8 @@ public class Task implements Parcelable {
 
     /** Utility methods */
 
-    public String getExpectedDurationAsString() {
-        return "";
+    public static String getDurationAsString(int seconds) {
+        return String.valueOf(seconds);
     }
 
     /** Inheriting from object methods */

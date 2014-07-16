@@ -1,7 +1,6 @@
 package com.android.pencilme.ui.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,10 +8,13 @@ import android.view.MenuItem;
 
 import com.android.pencilme.R;
 import com.android.pencilme.model.Task;
+import com.android.pencilme.ui.fragment.NewTaskFragment;
 import com.android.pencilme.ui.fragment.TaskDetailFragment;
-import com.android.pencilme.ui.fragment.abstraction.TaskFragment;
+import com.android.pencilme.ui.widget.DurationPickerDialogFragment;
 
-public class TaskDetailActivity extends Activity  implements TaskFragment.OnSetDurationClickedListener {
+public class TaskDetailActivity extends Activity implements DurationPickerDialogFragment.OnDurationSetListener {
+
+    TaskDetailFragment mTaskDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +31,12 @@ public class TaskDetailActivity extends Activity  implements TaskFragment.OnSetD
         }
 
         FragmentManager fm = getFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.layout.fragment_task_detail);
+        mTaskDetailFragment = (TaskDetailFragment) fm.findFragmentById(R.layout.fragment_task_detail);
 
-        if (fragment == null) {
-            fragment = TaskDetailFragment.newInstance(task);
+        if (mTaskDetailFragment == null) {
+            mTaskDetailFragment = TaskDetailFragment.newInstance(task);
             fm.beginTransaction().
-                    add(R.id.fragment_container, fragment).
+                    add(R.id.fragment_container, mTaskDetailFragment).
                     commit();
         }
     }
@@ -51,8 +53,9 @@ public class TaskDetailActivity extends Activity  implements TaskFragment.OnSetD
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onSetDurationClicked() {
 
+    @Override
+    public void onDurationSet(int seconds) {
+        mTaskDetailFragment.setTaskDuration(seconds);
     }
 }

@@ -131,4 +131,9 @@ public class UnscheduledTaskLoader extends AsyncTaskLoader<List<Task>> {
         onContentChanged();
     }
 
+    @Subscribe
+    public void editTaskEvent(TaskManager.EditTaskEvent event) {
+        onContentChanged();
+    }
+
 }

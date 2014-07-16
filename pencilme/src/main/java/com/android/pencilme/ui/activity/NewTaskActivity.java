@@ -1,6 +1,7 @@
 package com.android.pencilme.ui.activity;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,11 +9,11 @@ import android.view.MenuItem;
 
 import com.android.pencilme.R;
 import com.android.pencilme.ui.fragment.NewTaskFragment;
-import com.android.pencilme.ui.fragment.abstraction.TaskFragment;
+import com.android.pencilme.ui.widget.DurationPickerDialogFragment;
 
-public class NewTaskActivity extends Activity implements TaskFragment.OnSetDurationClickedListener {
+public class NewTaskActivity extends Activity implements DurationPickerDialogFragment.OnDurationSetListener {
 
-    private NewTaskFragment mNewTaskFragment;
+    NewTaskFragment mNewTaskFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +68,9 @@ public class NewTaskActivity extends Activity implements TaskFragment.OnSetDurat
         finish();
     }
 
-    @Override
-    public void onSetDurationClicked() {
 
+    @Override
+    public void onDurationSet(int seconds) {
+        mNewTaskFragment.setTaskDuration(seconds);
     }
 }

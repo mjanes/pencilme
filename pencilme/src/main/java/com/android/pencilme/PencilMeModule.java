@@ -2,6 +2,7 @@ package com.android.pencilme;
 
 import com.android.pencilme.loader.UnscheduledTaskLoader;
 import com.android.pencilme.ui.fragment.NewTaskFragment;
+import com.android.pencilme.ui.fragment.TaskDetailFragment;
 import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
@@ -22,6 +23,7 @@ import dagger.Provides;
 
         // Fragments
         NewTaskFragment.class,
+        TaskDetailFragment.class,
 
         // Loaders
         UnscheduledTaskLoader.class

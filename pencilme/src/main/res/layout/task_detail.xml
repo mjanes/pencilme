@@ -28,7 +28,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/duration_container"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:background="@android:drawable/list_selector_background">
 
         <TextView
             android:layout_width="wrap_content"
@@ -37,7 +38,7 @@
 
         <TextView
             android:id="@+id/duration_value"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="right"/>
 
@@ -82,6 +83,5 @@
             android:gravity="right" />
 
     </LinearLayout>
-
 
 </LinearLayout>
